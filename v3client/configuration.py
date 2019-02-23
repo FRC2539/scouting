@@ -22,8 +22,10 @@ import urllib3
 import six
 from six.moves import http_client as httplib
 
+import API_KEY
+
 api_key = {}
-api_key['X-TBA-Auth-Key'] = 'fBoWafOC4uubiiZjiLVZ5WEpddeiDZar8V3gbtg1Hq7hwKdjzHRwp4tJIFl63vBj'
+api_key['X-TBA-Auth-Key'] = API_KEY.key
 
 
 class TypeWithDefault(type):
@@ -56,7 +58,7 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
 
         # Authentication Settings
         # dict to store API key(s)
-        self.api_key = {'X-TBA-Auth-Key' : 'fBoWafOC4uubiiZjiLVZ5WEpddeiDZar8V3gbtg1Hq7hwKdjzHRwp4tJIFl63vBj'}
+        self.api_key = {'X-TBA-Auth-Key' : API_KEY.key}
         # dict to store API prefix (e.g. Bearer)
         self.api_key_prefix = {}
         # Username for HTTP basic authentication
