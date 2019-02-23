@@ -2,3 +2,5 @@ __pycache__/
 *.kdev4
 API_KEY.py
 *.csv
+.venv
+.pipup
