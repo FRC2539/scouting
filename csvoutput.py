@@ -7,41 +7,56 @@ from v3client.api.match_api import MatchApi
 with open('csvfile.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile, delimiter=' ')
 
-    event_key = '2019week0'
+    w0_keys = ['2019ckw0', '2019midcw0', '2019mnwcw', '2019week0', '2019cass', '2019inpr', '2019nyrra', '2019reny']
+    #event_key = '2019week0'
 
     eventApi = EventApi()
     matchApi = MatchApi()
-    oprResponse = eventApi.get_event_op_rs(event_key)
-    matchResponse = matchApi.get_event_matches(event_key)
 
     avgScore = 0
     avgWin = 0
     avgLoss = 0
     count = 0
 
-    for match in matchResponse:
-        print('Match: ' + str(match.match_number))
+    for event_key in w0_keys:
+        oprResponse = eventApi.get_event_op_rs(event_key)
+        matchResponse = matchApi.get_event_matches(event_key)
+
+        for match in matchResponse:
+            try:
+                blue = match.score_breakdown['blue']['totalPoints']
+                red = match.score_breakdown['red']['totalPoints']
+
+                avgScore = avgScore + blue + red
+
+                if blue >= red:
+                    avgWin = avgWin + blue
+                    avgLoss = avgLoss + red
+                else:
+                    avgWin = avgWin + red
+                    avgLoss = avgLoss + blue
+
+                count += 2
+
+            except TypeError:
+                pass
+
+        teamRow, ccwmRow, dprRow, oprRow = [], [], [], []
 
         try:
-            blue = match.score_breakdown['blue']['totalPoints']
-            red = match.score_breakdown['red']['totalPoints']
+            for team, ccwm in oprResponse.ccwms.items():
+                ccwmRow.append(round(ccwm, 2))
+                teamRow.append(int(team[3:len(team)]))
 
-            print('     Blue: ' + str(blue))
-            print('     Red:  ' + str(red))
+            for team, dpr in oprResponse.dprs.items():
+                dprRow.append(round(dpr, 2))
 
-            avgScore = avgScore + blue + red
+            for team, opr in oprResponse.oprs.items():
+                oprRow.append(round(opr, 2))
 
-            if blue >= red:
-                avgWin = avgWin + blue
-                avgLoss = avgLoss + red
-            else:
-                avgWin = avgWin + red
-                avgLoss = avgLoss + blue
+        except AttributeError:
+            print("No OPR data for " + event_key)
 
-            count += 2
-
-        except TypeError:
-            print('     No score data')
 
     avgScore = avgScore / count
     avgWin = avgWin / (count / 2)
@@ -50,18 +65,6 @@ with open('csvfile.csv', 'w', newline='') as csvfile:
     print('Average:      ' + str(avgScore))
     print('Average Win:  ' + str(avgWin))
     print('Average Loss: ' + str(avgLoss))
-
-    teamRow, ccwmRow, dprRow, oprRow = [], [], [], []
-
-    for team, ccwm in oprResponse.ccwms.items():
-        ccwmRow.append(round(ccwm, 2))
-        teamRow.append(int(team[3:len(team)]))
-
-    for team, dpr in oprResponse.dprs.items():
-        dprRow.append(round(dpr, 2))
-
-    for team, opr in oprResponse.oprs.items():
-        oprRow.append(round(opr, 2))
 
 
     teamNums, ccwms, dprs, oprs = [], [], [], []
