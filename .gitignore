@@ -7,6 +7,3 @@ API_KEY.py
 .pipup
 *.cpython-37.pyc
 *.pyc
-v3client/__pycache__
-v3client/api/__pycache__
-v3client/models/__pycache__
