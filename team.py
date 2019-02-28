@@ -8,6 +8,9 @@ class Team(object):
         self.team_key = 'frc' + str(self.number)
         self.async_ = False
         self.stats = stats
+        self.scoutData = None
+        self.pitData = None
+
         try:
             stats['rank'] = EventApi().get_team_event_status(self.team_key, self.event_key).qual.ranking.rank
         except AttributeError:
@@ -48,3 +51,28 @@ class Team(object):
                 pass
 
         return round(avgScore / count, 2), round(climbScore / count, 2), round(fouls / count, 2), round(auto / count, 2)
+
+
+    def populateScoutData(self, scoutData, pitData):
+        self.scoutData = scoutData
+        self.pitData = pitData
+        balls = 0
+        hatches = 0
+        climbs = 0
+        autoBalls = 0
+        autoHatches = 0
+        matchCount = len(self.scoutData)
+
+        for match in self.scoutData:
+            balls += match['teleopBalls']
+            hatches += match['teleopHatches']
+            climbs += match['habLevel']
+            autoBalls += match['autoBalls']
+            autoHatches += match['autoHatches']
+
+        self.stats['cycleTime'] = round(135 / ((balls + hatches) / matchCount), 2)
+        self.stats['ballsPerMatch'] = round(balls / matchCount, 2)
+        self.stats['hatchesPerMatch'] = round(hatches / matchCount, 2)
+        self.stats['habLevel'] = round(climbs / matchCount, 2)
+        self.stats['autoBalls'] = round(autoBalls / matchCount, 2)
+        self.stats['autoHatches'] = round(autoHatches / matchCount, 2)

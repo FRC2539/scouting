@@ -121,3 +121,15 @@ with open('csvfile.csv', 'w', newline='') as csvfile:
     writer.writerow(['Avg:     ', round(avgScore, 2)])
     writer.writerow(['AvgWin:  ', round(avgWin, 2)])
     writer.writerow(['AvgLoss: ', round(avgLoss, 2)])
+
+
+'''
+with open('csvfile.csv', 'r', newline='') as incsv:
+    reader = csv.reader(incsv, delimiter=',', quotechar='"')
+
+    #line = reader.__next__()
+    for line in reader:
+        for word in line:
+            if word != '':
+                print(word)
+'''
