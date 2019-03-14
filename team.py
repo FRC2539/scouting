@@ -3,7 +3,7 @@ from v3client.api.team_api import TeamApi
 
 class Team(object):
     def __init__(self, number, stats):
-        self.event_key = '2019week0'
+        self.event_key = '2019pahat'
         self.number = number
         self.team_key = 'frc' + str(self.number)
         self.async_ = False
@@ -48,7 +48,7 @@ class Team(object):
                 count += 1
 
             except:
-                pass
+                print('no score data for match ' + str(match.match_number))
 
         return round(avgScore / count, 2), round(climbScore / count, 2), round(fouls / count, 2), round(auto / count, 2)
 

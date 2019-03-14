@@ -7,7 +7,7 @@ from v3client.api.match_api import MatchApi
 with open('csvfile.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile, delimiter=' ')
 
-    event_key = '2019week0'
+    event_key = '2019pahat'
 
     eventApi = EventApi()
     matchApi = MatchApi()
